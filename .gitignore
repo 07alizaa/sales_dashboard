@@ -34,9 +34,5 @@ Thumbs.db
 *.sublime-workspace
 *.sublime-project
 
-# npm package lock
-package-lock.json
-yarn.lock
-
-# Optional: Ignore Excel uploads folder if you store uploads locally
+# Optional: Ignore Excel uploads folder if  store are uploads locally
 uploads/
