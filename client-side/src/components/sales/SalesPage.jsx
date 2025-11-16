@@ -11,6 +11,7 @@ import Modal from '../common/Modal/Modal';
 import Button from '../common/Button/Button';
 import Card from '../common/Card/Card';
 import Alert from '../common/Alert/Alert';
+import ConfirmDialog from '../common/ConfirmDialog/ConfirmDialog';
 
 const SalesPage = () => {
   const {
@@ -26,6 +27,8 @@ const SalesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSale, setEditingSale] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, saleId: null });
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Fetch sales on mount
   useEffect(() => {
@@ -42,11 +45,23 @@ const SalesPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    // simple confirmation - maybe use a nicer modal in the future?
-    if (window.confirm('Are you sure you want to delete this sale?')) {
-      await deleteSale(id);
+  const handleDelete = (id) => {
+    // open custom confirmation dialog instead of window.confirm
+    setDeleteConfirm({ isOpen: true, saleId: id });
+  };
+
+  const handleConfirmDelete = async () => {
+    setDeleteLoading(true);
+    try {
+      await deleteSale(deleteConfirm.saleId);
+      setDeleteConfirm({ isOpen: false, saleId: null });
+    } finally {
+      setDeleteLoading(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirm({ isOpen: false, saleId: null });
   };
 
   const handleSubmit = async (formData) => {
@@ -79,15 +94,19 @@ const SalesPage = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Sales Management</h1>
-          <p className="text-gray-600 mt-1">Manage all your sales records</p>
-        </div>
-        <Button variant="primary" onClick={handleCreate}>
+      {/* Page Header Banner */}
+      <div className="bg-gradient-to-r from-navy via-navy-light to-navy rounded-xl p-8 shadow-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Sales Management</h1>
+            <p className="text-white/80 mt-1">Manage all your sales records</p>
+          </div>
+        <button
+          onClick={handleCreate}
+          className="bg-white text-navy hover:bg-gray-50 font-semibold px-6 py-3 rounded-lg shadow-md transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-2"
+        >
           <svg
-            className="w-5 h-5 mr-2"
+            className="w-5 h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -100,7 +119,8 @@ const SalesPage = () => {
             />
           </svg>
           Add New Sale
-        </Button>
+        </button>
+        </div>
       </div>
 
       {/* Error Alert */}
@@ -109,21 +129,21 @@ const SalesPage = () => {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-          <p className="text-sm text-gray-600">Total Sales</p>
-          <p className="text-2xl font-bold text-navy">{sales.length}</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-6 border-2 border-navy/20 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl">
+          <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Sales</p>
+          <p className="text-4xl font-bold text-navy mt-2">{sales.length}</p>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-          <p className="text-sm text-gray-600">Categories</p>
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-6 border-2 border-cobalt/20 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl">
+          <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">Categories</p>
           {/* using Set to get unique categories - cool JS trick! */}
-          <p className="text-2xl font-bold text-cobalt">
+          <p className="text-4xl font-bold text-cobalt mt-2">
             {new Set(sales.map((s) => s.category)).size}
           </p>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-          <p className="text-sm text-gray-600">Products</p>
-          <p className="text-2xl font-bold text-green-600">
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-6 border-2 border-green-500/20 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl">
+          <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">Products</p>
+          <p className="text-4xl font-bold text-green-600 mt-2">
             {new Set(sales.map((s) => s.productName)).size}
           </p>
         </div>
@@ -153,6 +173,19 @@ const SalesPage = () => {
           loading={formLoading}
         />
       </Modal>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete Sale"
+        message="Are you sure you want to delete this sale? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+        loading={deleteLoading}
+      />
     </div>
   );
 };

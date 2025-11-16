@@ -5,10 +5,12 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { useState } from 'react';
+import ConfirmDialog from '../../common/ConfirmDialog/ConfirmDialog';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -17,8 +19,22 @@ const Navbar = () => {
     return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   };
 
+  const handleLogoutClick = () => {
+    setIsDropdownOpen(false);
+    setShowLogoutConfirm(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutConfirm(false);
+    logout();
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
+  };
+
   return (
-    <nav className="bg-white border-b border-gray-200 fixed w-full top-0 z-40">
+    <nav className="bg-blue-100 border-b border-blue-200 fixed w-full top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
@@ -90,10 +106,7 @@ const Navbar = () => {
                     </div>
                     
                     <button
-                      onClick={() => {
-                        setIsDropdownOpen(false);
-                        logout();
-                      }}
+                      onClick={handleLogoutClick}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
                     >
                       <svg
@@ -118,6 +131,18 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showLogoutConfirm}
+        onClose={handleCancelLogout}
+        onConfirm={handleConfirmLogout}
+        title="Logout"
+        message="Are you sure you want to logout from your account?"
+        confirmText="Logout"
+        cancelText="Cancel"
+        type="warning"
+      />
     </nav>
   );
 };

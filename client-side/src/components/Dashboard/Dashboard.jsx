@@ -35,11 +35,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome back! Here's your sales overview.</p>
+      <div className="bg-gradient-to-r from-navy via-navy-light to-navy rounded-2xl p-8 text-white shadow-xl">
+        <h1 className="text-4xl font-bold">Dashboard</h1>
+        <p className="text-blue-100 mt-2 text-lg">Welcome back! Here's your sales overview.</p>
       </div>
 
       {/* Stats Cards */}

@@ -12,6 +12,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  Cell,
 } from 'recharts';
 import { formatNumber } from '../../../utils/formatters';
 
@@ -46,6 +47,18 @@ const BarChart = ({ data }) => {
     );
   }
 
+  // Solid colors for bars
+  const barColors = [
+    '#000080', // Navy
+    '#0000FF', // Cobalt
+    '#8b5cf6', // Purple
+    '#10b981', // Green
+    '#f59e0b', // Orange
+    '#ec4899', // Pink
+    '#06b6d4', // Cyan
+    '#6366f1', // Indigo
+  ];
+
   return (
     <ResponsiveContainer width="100%" height={400}>
       <RechartsBar data={chartData}>
@@ -59,8 +72,11 @@ const BarChart = ({ data }) => {
         />
         <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
         <Tooltip content={<CustomTooltip />} />
-        <Legend />
-        <Bar dataKey="quantity" fill="#000080" name="Quantity Sold" radius={[8, 8, 0, 0]} />
+        <Bar dataKey="quantity" name="Quantity Sold" radius={[8, 8, 0, 0]}>
+          {chartData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={barColors[index % barColors.length]} />
+          ))}
+        </Bar>
       </RechartsBar>
     </ResponsiveContainer>
   );

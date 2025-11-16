@@ -73,7 +73,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-white border-r border-gray-200 overflow-y-auto scrollbar-thin">
+    <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-gradient-to-b from-navy via-navy-light to-navy border-r border-navy-dark overflow-y-auto scrollbar-thin">
       <nav className="p-4 space-y-2">
         {menuItems.map((item) => (
           <Link
@@ -83,8 +83,8 @@ const Sidebar = () => {
               flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
               ${
                 isActive(item.path)
-                  ? 'bg-navy text-white shadow-md'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-white text-navy shadow-lg scale-105'
+                  : 'text-white/80 hover:bg-white/10 hover:text-white'
               }
             `}
           >
@@ -95,9 +95,9 @@ const Sidebar = () => {
       </nav>
 
       {/* Sidebar footer */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50">
-        <div className="text-center text-sm text-gray-600">
-          <p className="font-medium">Sales Dashboard v1.0</p>
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20 bg-navy-dark">
+        <div className="text-center text-sm text-white/70">
+          <p className="font-medium text-white">Sales Dashboard v1.0</p>
           <p className="text-xs mt-1">© 2025 All rights reserved</p>
         </div>
       </div>

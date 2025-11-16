@@ -37,7 +37,7 @@ const StatsCard = ({ title, value, icon, format = 'number', trend, color = 'navy
         </div>
 
         {/* Icon */}
-        <div className={`w-16 h-16 rounded-lg bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-200`}>
+        <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
           {icon}
         </div>
       </div>

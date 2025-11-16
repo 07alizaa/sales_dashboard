@@ -40,50 +40,50 @@ const SalesTable = ({ sales, onEdit, onDelete, loading }) => {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-hidden rounded-xl border border-gray-200 shadow-lg">
+      <div className="overflow-x-auto">
       <table className="table">
         <thead>
           <tr>
-            <th>Product Name</th>
+            <th className="rounded-tl-xl">Product Name</th>
             <th>Category</th>
             <th>Quantity Sold</th>
             <th>Revenue</th>
             <th>Sales Date</th>
-            <th>Actions</th>
+            <th className="rounded-tr-xl">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white">
           {sales.map((sale) => (
             <tr key={sale._id}>
               <td className="font-medium text-gray-900">{sale.productName}</td>
               <td>
                 <span className="badge badge-primary">{sale.category}</span>
               </td>
-              <td>{sale.quantitySold}</td>
+              <td className="font-medium text-gray-700">{sale.quantitySold}</td>
               <td className="font-semibold text-navy">{formatCurrency(sale.revenue)}</td>
               <td className="text-gray-600">{formatDate(sale.salesDate)}</td>
               <td>
                 <div className="flex gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
+                  <button
                     onClick={() => onEdit(sale)}
+                    className="px-4 py-1.5 bg-cobalt text-white text-sm font-medium rounded-lg hover:bg-cobalt-light transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                   >
                     Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
+                  </button>
+                  <button
                     onClick={() => onDelete(sale._id)}
+                    className="px-4 py-1.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                   >
                     Delete
-                  </Button>
+                  </button>
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
