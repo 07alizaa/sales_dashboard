@@ -49,7 +49,7 @@ salesSchema.index({ salesDate: -1 });
 salesSchema.index({ createdBy: 1 });
 
 salesSchema.virtual('formattedRevenue').get(function () {
-  return `₹${this.revenue.toLocaleString('en-IN')}`;
+  return `Rs. ${this.revenue.toLocaleString('en-NP')}`;
 });
 
 salesSchema.set('toJSON', { virtuals: true });

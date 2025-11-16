@@ -2,6 +2,7 @@ const excelService = require('../services/excelService');
 const salesService = require('../services/salesService');
 const ResponseHandler = require('../utils/responseHandler');
 const { ValidationError } = require('../utils/errorHandler');
+const xlsx = require('xlsx');
 
 class UploadController {
   async uploadExcel(req, res, next) {
@@ -43,28 +44,48 @@ class UploadController {
 
   async downloadTemplate(req, res, next) {
     try {
-      const template = {
-        columns: [
-          'Product Name',
-          'Category',
-          'Quantity Sold',
-          'Revenue',
-          'Sales Date',
-        ],
-        example: {
+      // Sample data for the template
+      const sampleData = [
+        {
           'Product Name': 'Laptop',
-          Category: 'Electronics',
+          'Category': 'Electronics',
           'Quantity Sold': 15,
-          Revenue: 120000,
+          'Revenue': 120000,
           'Sales Date': '2025-10-05',
         },
-      };
+        {
+          'Product Name': 'Headphones',
+          'Category': 'Accessories',
+          'Quantity Sold': 40,
+          'Revenue': 40000,
+          'Sales Date': '2025-10-08',
+        },
+        {
+          'Product Name': 'Keyboard',
+          'Category': 'Accessories',
+          'Quantity Sold': 20,
+          'Revenue': 20000,
+          'Sales Date': '2025-10-10',
+        },
+      ];
 
-      return ResponseHandler.success(
-        res,
-        template,
-        'Excel template format'
-      );
+      // Create worksheet from sample data
+      const worksheet = xlsx.utils.json_to_sheet(sampleData);
+
+      // Create workbook and add worksheet
+      const workbook = xlsx.utils.book_new();
+      xlsx.utils.book_append_sheet(workbook, worksheet, 'Sales Data');
+
+      // Generate Excel file buffer
+      const excelBuffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+      // Set response headers for file download
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', 'attachment; filename="sales_template.xlsx"');
+      res.setHeader('Content-Length', excelBuffer.length);
+      
+      // Send the Excel file
+      res.end(excelBuffer, 'binary');
     } catch (error) {
       next(error);
     }
